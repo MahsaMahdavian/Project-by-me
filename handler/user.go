@@ -6,6 +6,7 @@ import (
 	"testMod/dto"
 	"testMod/service"
 	// "testMod/utils"
+	"testMod/validator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -33,6 +34,12 @@ func (userhandler userhandler) Create(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
 		})
+		return
+	}
+
+	validator:=validator.NewValidator()
+	if !validator.Validator(request){
+		ctx.JSON(http.StatusBadRequest,validator.GetErrors())
 		return
 	}
 	var userCreateServiceDto dto.UserCreateService

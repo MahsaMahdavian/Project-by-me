@@ -2,10 +2,10 @@ package dto
 
 type UserRequest struct {
 	Id    uint `query:"id" form:"id"`
-	Name   string `query:"name" form:"name"`
+	Name   string `query:"name" form:"name" validate:"required"`
 	Family string `query:"family" form:"family"`
 	Age    uint `query:"age" form:"age"`
-	Email  string `query:"email" form:"email"`
+	Email  string `query:"email" form:"email" validate:"required,email"`
 }
 
 type UserResponse struct {
