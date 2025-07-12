@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"testMod/cmd/server"
 	"testMod/config"
 	"testMod/database"
 	"testMod/handler"
+	"testMod/models"
 	"testMod/repository"
 	"testMod/service"
 )
@@ -18,14 +18,21 @@ func main() {
 
 	}
 	conn, err := database.Connect(config.AppConfig)
-	fmt.Println(conn.Ping())
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer database.Close(conn)
 
+	err = conn.AutoMigrate(&models.User{})
+	if err != nil {
+		log.Fatal("Error migrating database:", err)
+	}
 	userRepo := repository.NewUserRepository(conn)
 	userservice := service.NewUserService(userRepo)
 
 	userHandler:=handler.NewUserHandler(userservice)
 
+	
 	err = server.StartServer(config.AppConfig, userHandler)
 	if err != nil {
 		log.Fatal(err)

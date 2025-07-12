@@ -1,61 +1,87 @@
 package dto
 
+import "testMod/models"
+
 type UserRequest struct {
-	Id    uint `query:"id" form:"id"`
-	Name   string `query:"name" form:"name" validate:"required"`
-	Family string `query:"family" form:"family"`
-	Age    uint `query:"age" form:"age"`
-	Email  string `query:"email" form:"email" validate:"required,email"`
+	Id        uint          `query:"id" form:"id"`
+	FirstName string        `query:"first_name" form:"first_name" validate:"required"`
+	LastName  string        `query:"last_name" form:"last_name" validate:"required"`
+	Email     *string       `query:"email" form:"email" validate:"email"`
+	Mobile    string        `query:"mobile" form:"mobile" validate:"required"`
+	Age       uint          `query:"age" form:"age" validate:"required"`
+	Gender    models.Gender `query:"gender" form:"gender" validate:"required,oneof=male female"`
+	IsActive  bool          `query:"is_active" form:"is_active"`
 }
 
 type UserResponse struct {
-	Id     uint
-	Name   string
-	Family string
-	Age    uint
-	Email  string
+	Id        uint   `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+	Mobile    string `json:"mobile"`
+	Age       uint   `json:"age"`
+	Gender    string `json:"gender"`
+	IsActive  bool   `json:"is_active"`
 }
 
 type UserCreateRepository struct {
-	Name   string
-	Family string
-	Age    uint
-	Email  string
+	FirstName string
+	LastName  string
+	Email     *string
+	Mobile    string
+	Age       uint
+	Gender    models.Gender
+	IsActive  bool
 }
 
 type UserUpdateRepository struct {
-	Id     uint
-	Name   string
-	Family string
-	Age    uint
-	Email  string
+	Id        uint
+	FirstName string
+	LastName  string
+	Email     *string
+	Mobile    string
+	Age       uint
+	Gender    models.Gender
+	IsActive  bool
 }
 type UserGetRepository struct {
-	Id     uint
-	Name   string
-	Family string
-	Age    uint
-	Email  string
+	Id        uint
+	FirstName string
+	LastName  string
+	Email     *string
+	Mobile    string
+	Age       uint
+	Gender    models.Gender
+	IsActive  bool
 }
 
 type UserCreateService struct {
-	Name   string
-	Family string
-	Age    uint
-	Email  string
+	FirstName string
+	LastName  string
+	Email     *string
+	Mobile    string
+	Age       uint
+	Gender    models.Gender
+	IsActive  bool
 }
 
 type UserUpdateService struct {
-	Id     uint
-	Name   string
-	Family string
-	Age    uint
-	Email  string
+	Id        uint
+	FirstName string
+	LastName  string
+	Email     *string
+	Mobile    string
+	Age       uint
+	Gender    string
+	IsActive  bool
 }
 type UserGetService struct {
-	Id     uint
-	Name   string
-	Family string
-	Age    uint
-	Email  string
+	Id        uint
+	FirstName string
+	LastName  string
+	Email     *string
+	Mobile    string
+	Age       uint
+	Gender    string
+	IsActive  bool
 }

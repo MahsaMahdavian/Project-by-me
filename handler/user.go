@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"testMod/dto"
 	"testMod/service"
-	// "testMod/utils"
 	"testMod/validator"
 	"github.com/gin-gonic/gin"
 )
@@ -43,10 +42,17 @@ func (userhandler userhandler) Create(ctx *gin.Context) {
 		return
 	}
 	var userCreateServiceDto dto.UserCreateService
+	userCreateServiceDto.FirstName = request.FirstName
+	userCreateServiceDto.LastName = request.LastName
+	userCreateServiceDto.Mobile = request.Mobile
+	userCreateServiceDto.Gender= request.Gender
 	userCreateServiceDto.Age = request.Age
-	userCreateServiceDto.Name = request.Name
-	userCreateServiceDto.Family = request.Family
-	userCreateServiceDto.Email = request.Email
+	userCreateServiceDto.IsActive = request.IsActive
+	if request.Email != nil {
+		userCreateServiceDto.Email = request.Email
+	} else {
+		userCreateServiceDto.Email = nil
+	}
 
 	err = userhandler.userService.Create(userCreateServiceDto)
 	if err != nil {
@@ -61,7 +67,7 @@ func (userhandler userhandler) Create(ctx *gin.Context) {
 
 }
 
-func (userhandler userhandler) Update(ctx *gin.Context) {
+func (h userhandler) Update(ctx *gin.Context){
 	var request dto.UserRequest
 	err := ctx.Bind(&request)
 	if err != nil {
@@ -72,12 +78,15 @@ func (userhandler userhandler) Update(ctx *gin.Context) {
 	}
 	var userUpdateService dto.UserUpdateService
 	userUpdateService.Age = request.Age
-	userUpdateService.Name = request.Name
-	userUpdateService.Family = request.Family
+	userUpdateService.FirstName = request.FirstName
+	userUpdateService.LastName = request.LastName
+	userUpdateService.Mobile = request.Mobile
 	userUpdateService.Email = request.Email
+	userUpdateService.Gender=string(request.Gender)
+	userUpdateService.IsActive = request.IsActive
 	userUpdateService.Id = request.Id
 
-	err =userhandler. userService.Update(userUpdateService)
+	err =h.userService.Update(userUpdateService)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
