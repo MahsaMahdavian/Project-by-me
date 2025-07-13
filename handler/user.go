@@ -37,7 +37,7 @@ func (userhandler userhandler) Create(ctx *gin.Context) {
 	}
 
 	validator:=validator.NewValidator()
-	if !validator.Validator(request){
+	if !validator.Validator(&request){
 		ctx.JSON(http.StatusBadRequest,validator.GetErrors())
 		return
 	}
@@ -54,7 +54,7 @@ func (userhandler userhandler) Create(ctx *gin.Context) {
 		userCreateServiceDto.Email = nil
 	}
 
-	err = userhandler.userService.Create(userCreateServiceDto)
+	rowAffected,err := userhandler.userService.Create(userCreateServiceDto)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -62,7 +62,7 @@ func (userhandler userhandler) Create(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusCreated, gin.H{
-		"request": request,
+		"rowAffected": rowAffected,
 	})
 
 }
@@ -86,7 +86,7 @@ func (h userhandler) Update(ctx *gin.Context){
 	userUpdateService.IsActive = request.IsActive
 	userUpdateService.Id = request.Id
 
-	err =h.userService.Update(userUpdateService)
+	rowAffected,err :=h.userService.Update(userUpdateService)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -95,7 +95,7 @@ func (h userhandler) Update(ctx *gin.Context){
 		return
 	}
 	ctx.JSON(http.StatusCreated, gin.H{
-		"request": request,
+		"rowAffected": rowAffected,
 	})
 
 }
@@ -114,7 +114,7 @@ func (userhandler userhandler) Delete(ctx *gin.Context) {
 		})
 		return
 	}
-	err = userhandler.userService.Delete(uint(id64))
+	rowAffected,err := userhandler.userService.Delete(uint(id64))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -123,7 +123,7 @@ func (userhandler userhandler) Delete(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{
-		"message": "delete affected",
+		"rowAffected": rowAffected,
 	})
 }
 

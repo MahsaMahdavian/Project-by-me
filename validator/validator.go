@@ -59,8 +59,14 @@ func (v *Validator) validate(field reflect.Value, tag string, fieldname string) 
 
 func (v *Validator) applyRule(field reflect.Value, rule string) bool {
 
+	
+	if field.Kind() == reflect.Ptr {
+		if field.IsNil() {
+			return rule == "required" // only fail if rule is 'required'
+		}
+		field = field.Elem() // dereference pointer
+	}
 	parts := strings.Split(rule, "=")
-
 	switch parts[0] {
 	case "required":
 		return !isEmpty(field)

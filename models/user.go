@@ -3,7 +3,15 @@ package models
 import (
 	"errors"
 	"gorm.io/gorm"
+	"time"
+	"github.com/dgrijalva/jwt-go"
 )
+
+var SecretKey []byte
+
+var Claims jwt.Claims
+
+
 
 type Gender string
 
@@ -13,14 +21,16 @@ const (
 )
 
 type User struct {
-	ID        uint    `gorm:"primaryKey"`
-	FirstName string  `gorm:"size: 100; not null"`
-	LastName  string  `gorm:"size: 100;not null"`
-	Email     *string `gorm:"size:30;unique"`
-	Mobile    string  `gorm:"size:11; unique; not null"`
-	Age       uint    `gorm:"not null"`
-	Gender    Gender  `gorm:"type: gender"`
-	IsActive  bool    `gorm:"default: true"`
+	ID               uint      `gorm:"primaryKey"`
+	FirstName        string    `gorm:"size: 100; not null"`
+	LastName         string    `gorm:"size: 100;not null"`
+	Email            *string   `gorm:"size:30;unique"`
+	Mobile           string    `gorm:"size:11; unique; not null"`
+	Age              uint      `gorm:"not null"`
+	Gender           Gender    `gorm:"type: gender"`
+	IsActive         bool      `gorm:"default: true"`
+	OtpCode          uint      `gorm:"null"`
+	OtpCodeExpiredAt time.Time `gorm:"column:otp_code_expired_at"`
 	gorm.Model
 }
 

@@ -29,11 +29,12 @@ func main() {
 	}
 	userRepo := repository.NewUserRepository(conn)
 	userservice := service.NewUserService(userRepo)
-
 	userHandler:=handler.NewUserHandler(userservice)
 
-	
-	err = server.StartServer(config.AppConfig, userHandler)
+	authRepo := repository.NewAuthRepository(conn)
+	authservice := service.NewAuthService(authRepo)
+	authHandler:=handler.NewAuthHandler(authservice)
+	err = server.StartServer(config.AppConfig, userHandler,authHandler)
 	if err != nil {
 		log.Fatal(err)
 	}

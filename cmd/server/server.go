@@ -7,7 +7,7 @@ import (
 	"testMod/middleware"
 )
 
-func StartServer(config config.Config, userhandler handler.Userhandler) error {
+func StartServer(config config.Config, userhandler handler.Userhandler,authHandler handler.AuthHandler) error {
 
 	r := gin.Default()
 	userGroup := r.Group("/users")
@@ -17,6 +17,13 @@ func StartServer(config config.Config, userhandler handler.Userhandler) error {
 		userGroup.DELETE("delete/:id", userhandler.Delete)
 		userGroup.POST("create", userhandler.Create)
 		userGroup.PUT("update", userhandler.Update)
+	}
+
+		authGroup := r.Group("/auth")
+	{
+	
+		authGroup.POST("otp", authHandler.Otp)
+		authGroup.POST("login", authHandler.Login)
 	}
 
 	err := r.Run(config.AppPort)

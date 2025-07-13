@@ -18,6 +18,7 @@ type database struct{
 	PostgresPassword string
 	PostgresDb string
 	PostgresPort string
+	SecretKey string
 }
 
 var AppConfig Config
@@ -37,6 +38,7 @@ cfg.Database.PostgresPassword=os.Getenv("POSTGRES_PASSWORD")
 cfg.Database.PostgresHost=os.Getenv("POSTGRES_HOST")
 cfg.Database.PostgresPort=os.Getenv("POSTGRES_PORT")
 cfg.Database.PostgresDb=os.Getenv("POSTGRES_DB")
+cfg.Database.SecretKey=os.Getenv("SECRET_KEY")
 AppConfig=cfg
 return nil
 }
