@@ -1,9 +1,12 @@
 package repository
 
 import (
-	"gorm.io/gorm"
 	"testMod/dto"
 	"testMod/models"
+	"testMod/utils"
+	"time"
+
+	"gorm.io/gorm"
 )
 
 type UserRepository interface {
@@ -31,6 +34,8 @@ func (userRepo userRepository) Create(userCreateRepository dto.UserCreateReposit
 		Mobile:    userCreateRepository.Mobile,
 		Gender:    userCreateRepository.Gender,
 		IsActive:  userCreateRepository.IsActive,
+		OtpCode: uint(utils.GenerateRandomNumber()),
+		OtpCodeExpiredAt: time.Now().Add(time.Minute*1),
 	})
 
 	err := res.Error

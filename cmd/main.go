@@ -32,7 +32,7 @@ func main() {
 	userHandler:=handler.NewUserHandler(userservice)
 
 	authRepo := repository.NewAuthRepository(conn)
-	authservice := service.NewAuthService(authRepo)
+	authservice := service.NewAuthService(authRepo,config.AppConfig)
 	authHandler:=handler.NewAuthHandler(authservice)
 	err = server.StartServer(config.AppConfig, userHandler,authHandler)
 	if err != nil {

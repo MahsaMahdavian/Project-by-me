@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"gorm.io/gorm"
 	"testMod/dto"
+	"testMod/models"
+	"gorm.io/gorm"
 )
 
 type AuthRepository interface {
-	Login(loginDto dto.LoginRepositoryDto) (error)
+	Login(loginDto dto.LoginRepositoryDto) (models.User,error)
 	Otp(otpDto dto.OtpRepositoryDto) (error)
 
 }
@@ -21,10 +22,15 @@ func NewAuthRepository(conn *gorm.DB) AuthRepository {
 }
 
 
-func (authRepo authRepository) Login(loginDto dto.LoginRepositoryDto) (error) {
-	return nil
+func (authRepo authRepository) Login(loginDto dto.LoginRepositoryDto) (models.User,error) {
+var user models.User
+	err:=authRepo.conn.Where("mobile",loginDto.Mobile).Where("otp_code",loginDto.OtpCode).First(&user).Error
+	return user,err
 }
 
 func (authRepo authRepository) Otp(otpDto dto.OtpRepositoryDto) (error) {
-	return nil
+
+	var user models.User
+	err:=authRepo.conn.Where("mobile",otpDto.Mobile).First(&user).Error
+	return err
 }

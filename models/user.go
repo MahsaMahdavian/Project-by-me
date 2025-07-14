@@ -29,7 +29,7 @@ type User struct {
 	Age              uint      `gorm:"not null"`
 	Gender           Gender    `gorm:"type: gender"`
 	IsActive         bool      `gorm:"default: true"`
-	OtpCode          uint      `gorm:"null"`
+	OtpCode          uint      `gorm:"not null"`
 	OtpCodeExpiredAt time.Time `gorm:"column:otp_code_expired_at"`
 	gorm.Model
 }
