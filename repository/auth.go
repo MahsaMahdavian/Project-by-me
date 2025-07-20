@@ -8,7 +8,7 @@ import (
 
 type AuthRepository interface {
 	Login(loginDto dto.LoginRepositoryDto) (models.User,error)
-	Otp(otpDto dto.OtpRepositoryDto) (error)
+	Otp(otpDto dto.OtpRepositoryDto) (models.User,error)
 
 }
 
@@ -28,9 +28,9 @@ var user models.User
 	return user,err
 }
 
-func (authRepo authRepository) Otp(otpDto dto.OtpRepositoryDto) (error) {
+func (authRepo authRepository) Otp(otpDto dto.OtpRepositoryDto) (models.User,error) {
 
 	var user models.User
 	err:=authRepo.conn.Where("mobile",otpDto.Mobile).First(&user).Error
-	return err
+	return user,err
 }

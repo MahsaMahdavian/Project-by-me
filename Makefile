@@ -19,6 +19,8 @@ migrate_status:
 
 migrate_clean:
 	migrate -path $(MIGRATE_DIR) -database $(Db_URL) force 2
-run:
-	go run cmd/main.go
+run_app:
+	go run cmd/app/main.go
 
+run_otp_consumer:
+	go run cmd/consumer/otp_consumer.go

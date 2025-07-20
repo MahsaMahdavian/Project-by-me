@@ -12,6 +12,7 @@ func StartServer(config config.Config, userhandler handler.Userhandler,authHandl
 	r := gin.Default()
 	userGroup := r.Group("/users")
 	{
+		userGroup.Use(middleware.AuthMiddleware(config))
 		userGroup.Use(middleware.LoggingMiddleware())
 		userGroup.GET("list", userhandler.List)
 		userGroup.DELETE("delete/:id", userhandler.Delete)

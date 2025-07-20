@@ -2,12 +2,15 @@ package service
 
 import (
 	"errors"
-	"github.com/dgrijalva/jwt-go"
-	"gorm.io/gorm"
+	"fmt"
 	"testMod/config"
 	"testMod/dto"
+	"testMod/pkg/rabbitMq"
 	"testMod/repository"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"gorm.io/gorm"
 )
 
 type AuthService interface {
@@ -18,12 +21,16 @@ type AuthService interface {
 type authService struct {
 	authRepo repository.AuthRepository
 	config   config.Config
+	rabbitMq rabbitMq.RabbitMQ
 }
 
-func NewAuthService(authRepo repository.AuthRepository, config config.Config) AuthService {
+func NewAuthService(authRepo repository.AuthRepository,
+	 config config.Config,
+	  rabbitMq rabbitMq.RabbitMQ) AuthService {
 	return authService{
 		authRepo: authRepo,
 		config:   config,
+		rabbitMq: rabbitMq,
 	}
 }
 
@@ -36,7 +43,7 @@ func (authService authService) Login(loginDto dto.LoginServiceDto) (error, strin
 		return errors.New("کاربر یافت نشد"), ""
 	}
 	claims := jwt.MapClaims{
-		"userId":     user.ID,
+		"user_id": fmt.Sprintf("%d", user.ID)   ,
 		"expired_at": time.Now().Add(24 * time.Hour).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -47,9 +54,13 @@ func (authService authService) Login(loginDto dto.LoginServiceDto) (error, strin
 func (authService authService) Otp(otpDto dto.OtpService) error {
 	var otpRepo dto.OtpRepositoryDto
 	otpRepo.Mobile = otpDto.Mobile
-	err := authService.authRepo.Otp(otpRepo)
+	user,err := authService.authRepo.Otp(otpRepo)
 	if err != nil && errors.Is(err, gorm.ErrRecordNotFound) {
 		return errors.New("کاربر یافت نشد")
 	}
+	if err!=nil {
+		return err	
+	}
+	authService.rabbitMq.PublishMessage("otp",fmt.Sprintf("%d", user.ID))
 	return err
 }

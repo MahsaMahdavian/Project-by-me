@@ -12,6 +12,7 @@ import (
 type UserRepository interface {
 	Create(userCreateRepository dto.UserCreateRepository) (int64, error)
 	Update(userUpdateRepository dto.UserUpdateRepository) (int64, error)
+	Find(id string) (models.User, error)
 	Delete(id uint) (int64, error)
 	List() ([]dto.UserGetRepository, error)
 }
@@ -65,6 +66,13 @@ func (userRepo userRepository) Update(userUpdateRepository dto.UserUpdateReposit
 		return rowAffected, err
 	}
 	return rowAffected, err
+}
+
+func (userRepo userRepository) Find(id string) (models.User, error) {
+	var user models.User
+	err := userRepo.conn.Where("id", id).Find(&user).Error
+	
+	return user, err
 }
 func (userRepo userRepository) Delete(id uint) (int64, error) {
 	res := userRepo.conn.Where("id", id).Delete(&models.User{})

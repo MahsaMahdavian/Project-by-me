@@ -10,6 +10,7 @@ type Config struct{
 Database database
 AppName string
 AppPort string
+Rabbitmq rabbitmq
 }
 
 type database struct{
@@ -19,6 +20,12 @@ type database struct{
 	PostgresDb string
 	PostgresPort string
 	SecretKey string
+}
+type rabbitmq struct{
+	RabbitmqUserName string
+	RabbitmqPassword string
+	RabbitmqHost string
+	RabbitmqPort string
 }
 
 var AppConfig Config
@@ -39,6 +46,10 @@ cfg.Database.PostgresHost=os.Getenv("POSTGRES_HOST")
 cfg.Database.PostgresPort=os.Getenv("POSTGRES_PORT")
 cfg.Database.PostgresDb=os.Getenv("POSTGRES_DB")
 cfg.Database.SecretKey=os.Getenv("SECRET_KEY")
+cfg.Rabbitmq.RabbitmqUserName=os.Getenv("RABBITMQ_USERNAME")
+cfg.Rabbitmq.RabbitmqPassword=os.Getenv("RABBITMQ_PASSWORD")
+cfg.Rabbitmq.RabbitmqHost=os.Getenv("RABBITMQ_HOST")
+cfg.Rabbitmq.RabbitmqPort=os.Getenv("RABBITMQ_PORT")
 AppConfig=cfg
 return nil
 }

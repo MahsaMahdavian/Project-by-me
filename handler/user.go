@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"testMod/dto"
@@ -28,6 +29,8 @@ func NewUserHandler(userService service.UserService) Userhandler {
 
 func (userhandler userhandler) Create(ctx *gin.Context) {
 	var request dto.UserRequest
+
+
 	err := ctx.Bind(&request)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -128,6 +131,8 @@ func (userhandler userhandler) Delete(ctx *gin.Context) {
 }
 
 func (userhandler userhandler) List(ctx *gin.Context) {
+	userId:=ctx.GetString("user_id")
+	fmt.Println(userId)
 	rows, err := userhandler.userService.List()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
